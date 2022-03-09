@@ -1,0 +1,39 @@
+#Este documento incluye el arhivo principal del programa.
+"""
+Este archivo contendra diferentes funciones; Menu, Dato_CC_Verificacion, Add_Curso
+
+-->> Menu; La utilizaremos mostrar en pantalla las opciones que se le ofrecera al usuario, dentro de las cuales estan; Estudiantes, Curso, Salir.
+    ->Dentro de estas ofreceremos las diferentes opciones dentro de las cuales destacamos la de retroceder, el cual volvera a invocar la función menu.
+    
+    -->>Estudiante; Cargaremos las siguientes opciones asociandolas a sus respectivas funciones.
+        -->Matricular estudiante en un curso;
+            ->Invocaremos la función que le pedira los respectivos datos, cedula, realizando con anterioridad la respectiva verificación, asociandolas a los objetos de la funcion.
+            ¡Cabe resaltar que debemos verificar si este valor ingresado por el usuario, se encuentra dentro de la base de datos de estudiantes, si es así, asociamos el nombre a una variable!
+        -->Mostrar todos los estudiantes registrados;
+            ->La funcion desarrollara su procedimiento por si sola.
+        -->Consultar pomedio de estudiante.
+            ->Invocaremos la funcion que le pedira los datos respectivos, realizando la respectiva verificación.
+        -->Consultar materias matriculadas por un estudiante;
+            Volveremos a invocar funcion que pide los datos (cedula) y los verifica.
+            
+    -->>Curso; Cargaremos las siguientes opciones asociandolas a sus respectivas funciones.
+        -->Crear nuevo curso; 
+            ->Invocaremos a la variable Add_Curso, la cual nos pedira el nombre del curso y el numero de creditos, e invocaremos a la respectiva funcion pasandoles los paramentros obtenidos de la funcion Add_Curso
+        -->Mostrar todos los cursos registrados;
+            ->Invocaremos la funcion pertinente, mostrando los resultados.
+        -->Consultar estudiantes matriculados en un curso;
+            ->Le pedimos al usuario que seleccione una opcion, deplegamos una lista con con los cursos, e invocamos la funcion pertinente con el valor asociado al curso.
+        -->Porcentaje de estudiantes que gano y perdio un curso;
+            ->Invocamos la función pertinente y retornamos los datos.
+    -->>Salir; Salimos del programa.
+    
+    ¡Cuando etramos dentro de una de estas opciones nos cargara la opcion de retroceder, invocando nuevamente la funcion Menu!
+    
+-->>Dato_CC_Verificacion; Esta funcion le pedira al usuario un numero de cédula y rornara el nombre asociado a ese numero.
+Si es correcto retornara el valor asociado a ese número.
+Si no es así le volvera a pedir otro dato hasta un numero maximo de tres intento, cuando finalice estos tres intentos retornara "None", y volvera al menu principal.
+
+-->>Add_Curso; Le pedira dos datos, Nombre del curso y numero de creditos.
+
+Cabe resaltar que esta funciones estaran dentro de la funcion menu. 
+"""
