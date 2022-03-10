@@ -1,6 +1,7 @@
 import os
-import Funciones.funciones_estudiante
-import Funciones.funciones_curso
+import sys
+import Funciones.funciones_estudiante as funciones_student
+import Funciones.funciones_curso as funciones_cursos
 
 
 msg_principal_menu = "Programa de control de estuidantes y cursos de la Universidad"
@@ -24,6 +25,14 @@ opciones_list_cursos = ["Crear nuevo curso; -->> 1",
                         "Consultar estudiantes matriculados en un curso; -->> 3",
                         "Porcentaje de estudiantes que ganaron y perdieron un curso; -->> 4",
                         "Retroceder; -->> 5", ]
+
+list_cursos_record = ["Fisica mecanica", "Informatica",
+                      "Calculo diferencial", "Algebra y trigonometria",
+                      "Teoria de la información", "Circuitos"]
+
+list_cursos = ["Fisica mecanica -->> 1", "Informatica -->> 2",
+               "Calculo diferencial -->> 3", "Algebra y trigonometria -->> 4",
+               "Teoria de la información -->> 5", "Circuitos -->> 6"]
 
 Iniciar = True
 Menu_Inicial = True
@@ -66,6 +75,17 @@ def Menu_Cursos():
     selection_user_2 = input(msg_selecion_opcion)
     return selection_user_2
 
+def Menu_Curso_Record(list_cursos):
+    os.system("clear")
+
+    print("Cursos Registrados")
+    for opcion in list_cursos:
+        print(opcion)
+    selection_user = input(
+        "Seleciona el curso donde deseas matricular al estudiante ")
+
+    return selection_user
+
 def Opcion_user(selection_user, range): #Verifica la opcion selecionada por el usuario, determinando si es un string o int, y que no supere len, 1.
     """
     #Esta funcion nos permitira establecer que la opcion seleccionada por el usuario sea correcta, verificando si el dato ingresado por el usuario es un numero o string, debe cumplir la condicion, donde su logitud == 1.
@@ -81,6 +101,7 @@ def Opcion_user(selection_user, range): #Verifica la opcion selecionada por el u
     
     while condicional == True:
         aux_1 = selection_user.isdigit() # Si es un numero retorna True de lo contrario False.
+
         if aux_1 == True:  # Si es un numero lo convierte a un int
             aux_1 = int(selection_user)
         
@@ -91,7 +112,7 @@ def Opcion_user(selection_user, range): #Verifica la opcion selecionada por el u
         else:
             ciclo += 1
             selection_user = input("Te haz equivocado, haz ingresado una opcion incorrecta, vuelve a intentarlo ") #Verificar si hay error por asignar un nuevo valor a la variable de entrada de la funcion.
-            if ciclo > 3:
+            if ciclo > 5:
                 print("Intentalo en otra ocasión")
                 condicional = False
                 option_user_rst = False
@@ -130,15 +151,70 @@ def Establecer_Opcion_Principal (opcion):
 def Numero_Verificacion_BBD(nombre_user):
     return()
 
-#Esta funcion nos retorna el nombre del curso y número de creditos, una vez realizada la comprobacion de los datos ingresados.
-def Add_Curso(Nom_curso, Num_creditos):
-    
-    return(Nom_curso, Num_creditos)
 
 #Esta funcion añade estudiantes, retorna dos valores, cedula y nombre, una vez ralizada la comprobacion de los datos ingresados.
-def Add_students (Cedula, Nombre):
+def Verificacion_Identificacion (Identificacion):
+    os.system("clear")
+    
+    Instruciones = "Debes ingresar solamente números, los cuales pueden ser igual a una logitud de 8 o 10, tienes hasta 5 intentos."
+    print (Instruciones)
+    Iniciar = True
+    ciclo = 0
+    New_Identificacion = Identificacion
+    
+    while Iniciar == True:
+        ciclo += 1
+        Condicional = New_Identificacion.isdigit()
+        aux_len = len(Identificacion)
+        
+        if aux_len == 8 or aux_len == 10: #Estamos verificando dentro de los criterios de identificación colombiana.
+            if Condicional == True:
+                New_Identificacion = int(Identificacion)
+                Iniciar = False
+        else:
+            New_Identificacion = input("Te haz equivocado porfavor ingresa el número de cedula correcto ")
+            if ciclo >= 5:
+                Iniciar = False
+                break
 
-    return()
+    return Condicional, New_Identificacion
+
+def Verificacion_Nombre (Nombre):
+    os.system("clear")
+    
+    Instruciones = "Debes ingresar solamente letras, tienes una logitud de 120 caracteres incluyendo espacios, tienes hasta 5 intentos."
+    print(Instruciones)
+    Iniciar = True
+    ciclo = 0
+    Condicional = False
+    
+    while Iniciar == True:
+        New_Nombre = Nombre.title() #Convertimos a nombre propio.
+        aux_len = len(Nombre) #Determinamos la cantidad de caracteres.
+        
+        for caracter in New_Nombre: #Verifica si el string tiene números.
+            aux_verificacion_num = caracter.isdigit()
+            if aux_verificacion_num == True:
+                aux_len = 121 #Modificamos esta variable para que salte al else.
+                break
+        
+        if aux_len < 120: #Estamos verificando que name sea menor a 120.
+            while Iniciar == True: #Estamos verificando que un caracter no este más de 7 veces en el string.
+                for caracter in New_Nombre:
+                    aux_contador = New_Nombre.count(caracter)
+                    if aux_contador >= 7:
+                        Condicional = False
+                        Iniciar = False
+                        break
+                Condicional = True
+                Iniciar = False
+        else:
+            New_Nombre = input("Ingresa otra vez el nombre de tu estudiante, te haz equivocado de acuerdo a las intruciones dadas.")
+            if ciclo  >= 5:
+                Condicional = False
+                Iniciar = False
+
+    return Condicional, New_Nombre
 
 while Iniciar == True:
     
@@ -165,20 +241,62 @@ while Iniciar == True:
             #Comprobación e invocación de las funciones externas al archivo.
             if Verificacion == 1: #Agregar estudiante.
                 #Le pedimos los datos.
-                Identificacion_student = Num_Identificacion()
-                Nombre_student = Name_student()
+                name_student = input ("Ingresa el nombre del estudiante ")
+                num_identificacion = input ("Ingresa el número de identificación ")
+                
                 #Verificar si cumplen con los criterio.
+                V_1, Identificacion = Verificacion_Identificacion(num_identificacion) #Verificamos si el número es correcto.
+                V_2, Nombre = Verificacion_Nombre(name_student) #Verificamos si el nombre es correcto y lo retornamos con valores de Nom_propio.
                 
-                #Invocar la funcion que añade al archivo de texto dichos datos.
-                Add_students(Identificacion_student, Nombre_student)
+                if V_1 == True and V_2 == True:
+                    #Invocar la funcion que añade al archivo de texto dichos datos.
+                    funciones_student.add_student(Identificacion, Nombre)
                 
+                elif V_1 == True and V_2 == False:
+                    print ("Te equivocates al momento de ingresar el nombre del usuario, vuelve y selecciona otra vez opción")
+                elif V_1 == False and V_2 == True:
+                    print ("Te equivocaste al momento de ingresar el número de identificación, vuelve y selecciona otra vez la opción")
+                else:
+                    Menu_Inicial = False
+                    Menu_secund_students = False
+                    Menu_secund_cursos = False
+
             elif Verificacion == 2: #Matricular un estudiante en un curso.
-                #Le pedimos los datos.
+                def Si_No ():
+                    os.system("clear")
+                    print("Te haz equivocado muchas veces, deseas añadir un estudiante nuevo")
+                    return
                 
-                #Verificamos si cumplen con los criterios.
+                #Llamamos a la funcion que imprime el menu de cursos.
+                selection_user = Menu_Curso_Record(list_cursos) #Imprimimos list_cursos, y pedimos una opcion.
+                selection_user = Opcion_user(selection_user, list_cursos) #Verificamos.
                 
-                #Invocamos la fucion que matricula al estudiante, añadiendolo en la base de datos.
-                Add_students()
+                if selection_user == False:
+                    print ("Te haz equivocado al selecionar una opción, porfavor vuelvelo a intentar en otro momento")
+                else:
+                    opcion_select_curso = list_cursos_record[selection_user-1] #Estamos segmentado y seleccionando la opcion del usuario.                    
+                #Le pedimos el número de identificación para buscarlos en la base de datos student.txt, si esta se añade el estudiante a dicho curso invocando la funcion pertinente.
+                #Si no esta le preguntamos si desea añadir dicha identificación a la base de datos, forzando el valor de Verificación = 1, para que así proceda otra vez a realizar este paso.
+                
+                #Le pedimos al usuario el numero de identificación.
+                num_identificacion = input("Vamos a buscar al estudiante, por favor, ingresa el número de identificación del estudiante ")
+                
+                Condicional = Verificacion_Identificacion(num_identificacion)
+                
+                #Verificamos si el número de identificación esta en la base de datos.
+                if Condicional == True:
+                    Verificacion_SI_NO = funciones_student.Verificacion_Identificacion_BBD(num_identificacion)
+                    if Verificacion_SI_NO == True: #Indica que si se encontro el número ingresado
+                        funciones_student.Matricular_student_curso(opcion_select_curso, num_identificacion)
+                else:
+                    aux_elecion_user = Si_No()
+                    aux_elecion_user = Opcion_user(aux_elecion_user, ["Si", "NO"])
+                    if aux_elecion_user == False:
+                        print("Te haz equivocado, por favor sigue las intruciones la proxima vez, vuelvelo a intentar más tarde")
+                    elif aux_elecion_user == 1:
+                        Verificacion = 1
+                    elif aux_elecion_user == 2:
+                        print("Ok, vuelvelo a intentar en otra ocasión")
                 
             elif Verificacion == 3:  # Mostrar todos los estudiantes registrados.
                 #Invocamos la fucion que muestra los estudiantes registrados en la base de datos.

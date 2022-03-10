@@ -8,3 +8,4 @@ En este archivo crearemos funciones que impliquen; las consulta de información 
 
 -->>Porcentaje de estudiantes que gano y perdio un curso;
 """
+

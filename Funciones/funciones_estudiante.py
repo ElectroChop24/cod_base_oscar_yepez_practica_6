@@ -13,3 +13,11 @@ En este archivo crearemos funciones que impliquen; la modificación de arhivos.
 
 -->> Retroceder;
 """
+def Verificacion_Identificacion_BBD (Numero_Buscar): #Verificamos si el número de identificación esta, retornando True o False
+    return
+
+def add_student ():
+    return
+
+def Matricular_student_curso ():
+    return
