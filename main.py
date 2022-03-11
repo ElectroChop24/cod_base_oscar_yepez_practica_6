@@ -3,6 +3,9 @@ import sys
 import Funciones.funciones_estudiante as funciones_student
 import Funciones.funciones_curso as funciones_cursos
 
+Lista_estudiantes = open("/BBD_student/student.txt", "r")
+
+
 
 msg_principal_menu = "Programa de control de estuidantes y cursos de la Universidad"
 msg_secun_estudiantes = "Has selecionado la opcion de Estudiantes, ahora seleciona que deseas hacer, marcando el número correspondiente"
@@ -290,7 +293,7 @@ while Iniciar == True:
                         funciones_student.Matricular_student_curso(opcion_select_curso, num_identificacion)
                 else:
                     aux_elecion_user = Si_No()
-                    aux_elecion_user = Opcion_user(aux_elecion_user, ["Si", "NO"])
+                    aux_elecion_user = Opcion_user(aux_elecion_user, ["Si", "No"])
                     if aux_elecion_user == False:
                         print("Te haz equivocado, por favor sigue las intruciones la proxima vez, vuelvelo a intentar más tarde")
                     elif aux_elecion_user == 1:
@@ -300,17 +303,38 @@ while Iniciar == True:
                 
             elif Verificacion == 3:  # Mostrar todos los estudiantes registrados.
                 #Invocamos la fucion que muestra los estudiantes registrados en la base de datos.
-                Add_students()
-                
+                Lista_Estudiantes = funciones_student.Mostrar_all_student_record()
+                for student in Lista_Estudiantes:
+                    print(Lista_Estudiantes)
+
             elif Verificacion == 4:  # Consultar promedio de estudiantes.
                 #Invocamos la fucion que matricula al estudiante, añadiendolo en la base de datos.
-                Add_students()
-            elif Verificacion == 5:  # Matricular un estudiante en un curso.
-                #Le pedimos los datos.
-                #Verificamos si cumplen con los criterios.
-                #Invocamos la fucion que matricula al estudiante, añadiendolo en la base de datos.
-                Add_students()
+
+                #Le pedimos al usuario el numero de identificación.
+                num_identificacion = input("Vamos a buscar al estudiante, por favor, ingresa el número de identificación del estudiante ")
+
+                Condicional = Verificacion_Identificacion(num_identificacion)
                 
+                if Condicional == True:
+                    Si_No_Econtrado = funciones_student.Consultar_promedio_student(num_identificacion)
+                    print(Si_No_Econtrado)
+                else:
+                    print("El número ingresado no se econtro dentro de la base de datos, intenta registrarlo, seleccionado la opcion pertinente")
+                
+            elif Verificacion == 5:  # Matricular un estudiante en un curso.
+                #Le pedimos los datos, los verificamos, y le preguntamos donde quiere registrar al estudiante.
+                
+                #Le pedimos los datos.
+                num_identificacion = input("Ingresa el número de identificación ")
+                
+                #Los buscamos en la base de datos.
+                Si_No_Econtrado = funciones_student.Verificacion_Identificacion_BBD(num_identificacion)
+                
+                #Verificamos y evaluamos.
+                if Si_No_Econtrado == True:
+                    print("")
+                else:
+                    print("El número de identifición ingresado es incorrecto, vuelvelo a intentar nuevamente.")
             elif Verificacion == 6: #Regresa al menu principal, cambiando los valores pertinentes, "Retroceder"
                 Menu_Inicial = True
                 Menu_secund_students = False
