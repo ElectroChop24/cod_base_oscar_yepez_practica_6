@@ -21,3 +21,11 @@ def add_student ():
 
 def Matricular_student_curso ():
     return
+
+def Mostrar_all_student_record ():
+    x = open()
+    
+    return
+
+def Consultar_promedio_student (Numero_identificacion):
+    return
