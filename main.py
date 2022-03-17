@@ -3,9 +3,15 @@ import sys
 import Funciones.funciones_estudiante as funciones_student
 import Funciones.funciones_curso as funciones_cursos
 
-Lista_estudiantes = open("/BBD_student/student.txt", "r")
+datos_archivo_students = open("BBD_student/students.txt", mode="r+", encoding="UTF-8")
+student_data = datos_archivo_students.read()
+student_data = [student_data] #Los almacenamos en una lista
+datos_archivo_students.close()
 
-
+datos_archivo_subjets = open("BBD_student/subjects.txt", mode="r+", encoding="UTF-8")
+subjects_data = datos_archivo_subjets.read()
+subjects_data = [subjects_data]
+datos_archivo_subjets.close()
 
 msg_principal_menu = "Programa de control de estuidantes y cursos de la Universidad"
 msg_secun_estudiantes = "Has selecionado la opcion de Estudiantes, ahora seleciona que deseas hacer, marcando el número correspondiente"
@@ -33,18 +39,16 @@ list_cursos_record = ["Fisica mecanica", "Informatica",
                       "Calculo diferencial", "Algebra y trigonometria",
                       "Teoria de la información", "Circuitos"]
 
-list_cursos = ["Fisica mecanica -->> 1", "Informatica -->> 2",
-               "Calculo diferencial -->> 3", "Algebra y trigonometria -->> 4",
-               "Teoria de la información -->> 5", "Circuitos -->> 6"]
-
 Iniciar = True
 Menu_Inicial = True
 Menu_secund_students = False #Estudantes
 Menu_secund_cursos = False #Cursos
+Modificado = False # Archivo modificado.
 
 Verificacion = 0
 
 def Menu_Principal():
+    "Me imprime el menu principal del programa, ademas le pide una opción para verificarla en la respectiva función"
     os.system("clear")
     
     global opciones_list_1, msg_selecion_opcion
@@ -57,6 +61,7 @@ def Menu_Principal():
     return selection_user
 
 def Menu_Estudiantes():
+    "Muestra las opciones de estudiantes, ademas le pide un dato para realizar la respectiva verificación"
     os.system("clear")
 
     global opciones_list_estudiantes, msg_secun_estudiantes, msg_selecion_opcion
@@ -68,6 +73,7 @@ def Menu_Estudiantes():
     return selection_user_2
 
 def Menu_Cursos():
+    "Imprime las opciones de curso, ademas le pide que selecciones una opción, para realizar la respectiva verficación."
     os.system("clear")
     
     global opciones_list_cursos, msg_secun_cursos, msg_selecion_opcion
@@ -79,6 +85,7 @@ def Menu_Cursos():
     return selection_user_2
 
 def Menu_Curso_Record(list_cursos):
+    "Esta funcion no, ya que el usuario puede llegar y modificar el archivo y puede cambiar los nombre del curso, lo mejor seria extraer esos cursos y guardarlo en una dicionario"
     os.system("clear")
 
     print("Cursos Registrados")
@@ -88,6 +95,14 @@ def Menu_Curso_Record(list_cursos):
         "Seleciona el curso donde deseas matricular al estudiante ")
 
     return selection_user
+
+def Cerrar_Programa_Guardar(new_data_student):
+    "Ivocamos estta funcion una vez se finalice la ejecución del programa para guardar los cambios realizados en los archivos"
+    
+    datos_archivo_students = open("BBD_student/students.txt", mode="w", encoding="UTF-8")
+    new_data_student_string = new_data_student[0]
+    datos_archivo_students.write(new_data_student_string)
+    datos_archivo_students.close()
 
 def Opcion_user(selection_user, range): #Verifica la opcion selecionada por el usuario, determinando si es un string o int, y que no supere len, 1.
     """
@@ -115,14 +130,17 @@ def Opcion_user(selection_user, range): #Verifica la opcion selecionada por el u
         else:
             ciclo += 1
             selection_user = input("Te haz equivocado, haz ingresado una opcion incorrecta, vuelve a intentarlo ") #Verificar si hay error por asignar un nuevo valor a la variable de entrada de la funcion.
-            if ciclo > 5:
-                print("Intentalo en otra ocasión")
-                condicional = False
-                option_user_rst = False
-                #break
+        if ciclo > 5:
+            print("Intentalo en otra ocasión")
+            condicional = False
+            option_user_rst = False
+            #break
+        
+        #El ultimo if se movio una indexación a la izquierda, ya que al presionar una opción correcta en el ultimo intento me sacaba del programa, estamos obligando a esta verificación la haga si el # ciclo sea mayor a 5.      
     return option_user_rst
 
 def Establecer_Opcion_Principal (opcion):
+    ""
     global Menu_secund_cursos, Menu_Inicial, Menu_secund_students, Iniciar
     
     x1 = Menu_Inicial
@@ -159,8 +177,6 @@ def Numero_Verificacion_BBD(nombre_user):
 def Verificacion_Identificacion (Identificacion):
     os.system("clear")
     
-    Instruciones = "Debes ingresar solamente números, los cuales pueden ser igual a una logitud de 8 o 10, tienes hasta 5 intentos."
-    print (Instruciones)
     Iniciar = True
     ciclo = 0
     New_Identificacion = Identificacion
@@ -175,18 +191,18 @@ def Verificacion_Identificacion (Identificacion):
                 New_Identificacion = int(Identificacion)
                 Iniciar = False
         else:
+            os.system("clear")
+            Instruciones = "Debes ingresar solamente números, los cuales pueden ser igual a una logitud de 8 o 10, tienes hasta 5 intentos."
+            print(Instruciones)
             New_Identificacion = input("Te haz equivocado porfavor ingresa el número de cedula correcto ")
             if ciclo >= 5:
                 Iniciar = False
                 break
 
-    return Condicional, New_Identificacion
+    return Condicional, (New_Identificacion) #la identificación la retornamos en string, para concatenar.
 
 def Verificacion_Nombre (Nombre):
     os.system("clear")
-    
-    Instruciones = "Debes ingresar solamente letras, tienes una logitud de 120 caracteres incluyendo espacios, tienes hasta 5 intentos."
-    print(Instruciones)
     Iniciar = True
     ciclo = 0
     Condicional = False
@@ -212,6 +228,10 @@ def Verificacion_Nombre (Nombre):
                 Condicional = True
                 Iniciar = False
         else:
+            os.system("clear")
+
+            Instruciones = "Debes ingresar solamente letras, tienes una logitud de 120 caracteres incluyendo espacios, tienes hasta 5 intentos."
+            print(Instruciones)
             New_Nombre = input("Ingresa otra vez el nombre de tu estudiante, te haz equivocado de acuerdo a las intruciones dadas.")
             if ciclo  >= 5:
                 Condicional = False
@@ -219,6 +239,7 @@ def Verificacion_Nombre (Nombre):
 
     return Condicional, New_Nombre
 
+#Apartir de aqui inicia la ejecución principal del programa.
 while Iniciar == True:
     
     if Menu_Inicial == True: #Menu principal del programa.
@@ -228,7 +249,8 @@ while Iniciar == True:
             Iniciar = False
             break
         else:
-            Menu_Inicial, Menu_secund_students, Menu_secund_cursos, Iniciar = Establecer_Opcion_Principal(selection_user)            
+            Menu_Inicial, Menu_secund_students, Menu_secund_cursos, Iniciar = Establecer_Opcion_Principal(selection_user)
+            #Estamos definiendo que opcion eligio el usuario, y de acuerdo a eso, asignar los valores pertinentes.
         
     elif Menu_secund_students == True:
         while Menu_secund_students == True:
@@ -244,8 +266,8 @@ while Iniciar == True:
             #Comprobación e invocación de las funciones externas al archivo.
             if Verificacion == 1: #Agregar estudiante.
                 #Le pedimos los datos.
-                name_student = input ("Ingresa el nombre del estudiante ")
-                num_identificacion = input ("Ingresa el número de identificación ")
+                name_student = input ("Ingresa el nombre del estudiante: ")
+                num_identificacion = input ("Ingresa el número de identificación: ")
                 
                 #Verificar si cumplen con los criterio.
                 V_1, Identificacion = Verificacion_Identificacion(num_identificacion) #Verificamos si el número es correcto.
@@ -253,10 +275,12 @@ while Iniciar == True:
                 
                 if V_1 == True and V_2 == True:
                     #Invocar la funcion que añade al archivo de texto dichos datos.
-                    funciones_student.add_student(Identificacion, Nombre)
-                
+                    new_data_student = funciones_student.add_student(Identificacion, Nombre, student_data) #Retorna una lista con el nuevo dato a ingresar.
+                    Modificado = True
+                    
                 elif V_1 == True and V_2 == False:
                     print ("Te equivocates al momento de ingresar el nombre del usuario, vuelve y selecciona otra vez opción")
+                    
                 elif V_1 == False and V_2 == True:
                     print ("Te equivocaste al momento de ingresar el número de identificación, vuelve y selecciona otra vez la opción")
                 else:
@@ -271,7 +295,9 @@ while Iniciar == True:
                     return
                 
                 #Llamamos a la funcion que imprime el menu de cursos.
-                selection_user = Menu_Curso_Record(list_cursos) #Imprimimos list_cursos, y pedimos una opcion.
+                selection_user = Menu_Curso_Record(list_cursos)
+                
+                #Imprimimos list_cursos, y pedimos una opcion.
                 selection_user = Opcion_user(selection_user, list_cursos) #Verificamos.
                 
                 if selection_user == False:
@@ -300,6 +326,7 @@ while Iniciar == True:
                         Verificacion = 1
                     elif aux_elecion_user == 2:
                         print("Ok, vuelvelo a intentar en otra ocasión")
+                    
                 
             elif Verificacion == 3:  # Mostrar todos los estudiantes registrados.
                 #Invocamos la fucion que muestra los estudiantes registrados en la base de datos.
@@ -336,6 +363,9 @@ while Iniciar == True:
                 else:
                     print("El número de identifición ingresado es incorrecto, vuelvelo a intentar nuevamente.")
             elif Verificacion == 6: #Regresa al menu principal, cambiando los valores pertinentes, "Retroceder"
+                if Modificado == True:
+                    Cerrar_Programa_Guardar(new_data_student)
+
                 Menu_Inicial = True
                 Menu_secund_students = False
                 Menu_secund_cursos = False
@@ -358,19 +388,19 @@ while Iniciar == True:
             if Verificacion == 1:  # Crear nuevo curso
             #if Verificacion == opciones_list_estudiantes[Verificacion -1], podriamos utilizar este codigo, ambos cumplen con su funcion.
                
-                Add_students()
+                print()
 
             elif Verificacion == 2:  # Mostrar todos los cursos registrados.
             #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
-                Add_students()
+                print()
 
             elif Verificacion == 3:  # Consultar estudiantes matriculados en un curso.
             #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
-                Add_students()
+                print()
 
             elif Verificacion == 4:  #Porcentaje de estudiantes que gano y perdio un curso.
             #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
-                Add_students()
+                print()
 
             elif Verificacion == 5:  # Regresa al menu principal, cambiando los valores pertinentes, "Retroceder"
             #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
@@ -384,3 +414,5 @@ while Iniciar == True:
         
     else:
         Iniciar = False
+        Menu_secund_students = False
+        Menu_secund_cursos = False

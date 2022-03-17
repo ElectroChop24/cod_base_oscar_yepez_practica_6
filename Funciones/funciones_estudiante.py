@@ -13,11 +13,16 @@ En este archivo crearemos funciones que impliquen; la modificación de arhivos.
 
 -->> Retroceder;
 """
+
 def Verificacion_Identificacion_BBD (Numero_Buscar): #Verificamos si el número de identificación esta, retornando True o False
     return
 
-def add_student ():
-    return
+def add_student (Identificacion, Nombre, Student_data):
+    concatenacion_data_user = (str(Identificacion) + ";" + Nombre + "\n")
+    
+    Student_data = Student_data[0] + concatenacion_data_user
+    print("El estudiante se ha añadido sactifactoriamente")
+    return [Student_data] #Retornamos a una lista.
 
 def Matricular_student_curso ():
     return
