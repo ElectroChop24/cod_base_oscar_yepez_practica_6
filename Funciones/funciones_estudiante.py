@@ -14,6 +14,18 @@ En este archivo crearemos funciones que impliquen; la modificación de arhivos.
 -->> Retroceder;
 """
 
+def Obtener_Name_Student(student_data):
+    List_students = []
+    student_data = student_data[0]
+    student_data = student_data.split("\n")
+    for name in student_data:
+        if len(name.split(";")) == 2:
+            name_studen = name.split(";")
+            name_studen = name_studen[1] + "\n"
+            List_students.append(name_studen)
+            List_students = (List_students)
+    return List_students
+
 def Verificacion_Identificacion_BBD (Numero_Buscar): #Verificamos si el número de identificación esta, retornando True o False
     return
 
@@ -27,10 +39,6 @@ def add_student (Identificacion, Nombre, Student_data):
 def Matricular_student_curso ():
     return
 
-def Mostrar_all_student_record ():
-    x = open()
-    
-    return
 
 def Consultar_promedio_student (Numero_identificacion):
     return

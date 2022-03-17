@@ -8,14 +8,14 @@ student_data = datos_archivo_students.read()
 student_data = [student_data] #Los almacenamos en una lista
 datos_archivo_students.close()
 
-datos_archivo_subjets = open("BBD_student/subjects.txt", mode="r+", encoding="UTF-8")
-subjects_data = datos_archivo_subjets.read()
+datos_archivo_subjects = open("BBD_student/subjects.txt", mode="r+", encoding="UTF-8")
+subjects_data = datos_archivo_subjects.read()
 subjects_data = [subjects_data]
-datos_archivo_subjets.close()
+datos_archivo_subjects.close()
 
-msg_principal_menu = "Programa de control de estuidantes y cursos de la Universidad"
-msg_secun_estudiantes = "Has selecionado la opcion de Estudiantes, ahora seleciona que deseas hacer, marcando el número correspondiente"
-msg_secun_cursos = "Has selecionado la opcion de Cursos, ahora seleciona que deseas hacer, marcando el número correspondiente"
+msg_principal_menu = "\nPrograma de control de estuidantes y cursos de la Universidad"
+msg_secun_estudiantes = "\nHas selecionado la opcion de Estudiantes, ahora seleciona que deseas hacer, marcando el número correspondiente"
+msg_secun_cursos = "\nHas selecionado la opcion de Cursos, ahora seleciona que deseas hacer, marcando el número correspondiente"
 msg_selecion_opcion = "Seleciona una de las opciones marcando el número correspondiente en tu teclado: "
 
 opciones_list_principal = ["Estudiantes -->> 1",
@@ -62,8 +62,8 @@ def Menu_Principal():
 
 def Menu_Estudiantes():
     "Muestra las opciones de estudiantes, ademas le pide un dato para realizar la respectiva verificación"
-    os.system("clear")
-
+    
+    print("\n")
     global opciones_list_estudiantes, msg_secun_estudiantes, msg_selecion_opcion
 
     print(msg_secun_estudiantes, end="\n")
@@ -74,7 +74,6 @@ def Menu_Estudiantes():
 
 def Menu_Cursos():
     "Imprime las opciones de curso, ademas le pide que selecciones una opción, para realizar la respectiva verficación."
-    os.system("clear")
     
     global opciones_list_cursos, msg_secun_cursos, msg_selecion_opcion
     
@@ -84,25 +83,18 @@ def Menu_Cursos():
     selection_user_2 = input(msg_selecion_opcion)
     return selection_user_2
 
-def Menu_Curso_Record(list_cursos):
-    "Esta funcion no, ya que el usuario puede llegar y modificar el archivo y puede cambiar los nombre del curso, lo mejor seria extraer esos cursos y guardarlo en una dicionario"
-    os.system("clear")
-
-    print("Cursos Registrados")
-    for opcion in list_cursos:
-        print(opcion)
-    selection_user = input(
-        "Seleciona el curso donde deseas matricular al estudiante ")
-
-    return selection_user
-
 def Cerrar_Programa_Guardar(new_data_student):
-    "Ivocamos estta funcion una vez se finalice la ejecución del programa para guardar los cambios realizados en los archivos"
+    "Ivocamos esta funcion una vez se finalice la ejecución del programa para guardar los cambios realizados en los archivos"
     
     datos_archivo_students = open("BBD_student/students.txt", mode="w", encoding="UTF-8")
     new_data_student_string = new_data_student[0]
     datos_archivo_students.write(new_data_student_string)
     datos_archivo_students.close()
+
+def Crear_new_data_subjects (data_subjects_concatenada):
+    datos_archivo_subjects = open("BBD_student/subjects.txt", mode="a", encoding="UTF-8")
+    datos_archivo_subjects.write(data_subjects_concatenada)
+    datos_archivo_subjects.close()
 
 def Opcion_user(selection_user, range): #Verifica la opcion selecionada por el usuario, determinando si es un string o int, y que no supere len, 1.
     """
@@ -251,7 +243,7 @@ while Iniciar == True:
         else:
             Menu_Inicial, Menu_secund_students, Menu_secund_cursos, Iniciar = Establecer_Opcion_Principal(selection_user)
             #Estamos definiendo que opcion eligio el usuario, y de acuerdo a eso, asignar los valores pertinentes.
-        
+    #Menu Estudiantes.
     elif Menu_secund_students == True:
         while Menu_secund_students == True:
             #Inicialmente imprimimos el menu que corresponde a esta opcion.
@@ -277,6 +269,9 @@ while Iniciar == True:
                     #Invocar la funcion que añade al archivo de texto dichos datos.
                     new_data_student = funciones_student.add_student(Identificacion, Nombre, student_data) #Retorna una lista con el nuevo dato a ingresar.
                     Modificado = True
+
+                    if Modificado == True:
+                        Cerrar_Programa_Guardar(new_data_student)
                     
                 elif V_1 == True and V_2 == False:
                     print ("Te equivocates al momento de ingresar el nombre del usuario, vuelve y selecciona otra vez opción")
@@ -288,12 +283,7 @@ while Iniciar == True:
                     Menu_secund_students = False
                     Menu_secund_cursos = False
 
-            elif Verificacion == 2: #Matricular un estudiante en un curso.
-                def Si_No ():
-                    os.system("clear")
-                    print("Te haz equivocado muchas veces, deseas añadir un estudiante nuevo")
-                    return
-                
+            elif Verificacion == 2: #Matricular un estudiante en un curso.                
                 #Llamamos a la funcion que imprime el menu de cursos.
                 selection_user = Menu_Curso_Record(list_cursos)
                 
@@ -330,9 +320,13 @@ while Iniciar == True:
                 
             elif Verificacion == 3:  # Mostrar todos los estudiantes registrados.
                 #Invocamos la fucion que muestra los estudiantes registrados en la base de datos.
-                Lista_Estudiantes = funciones_student.Mostrar_all_student_record()
-                for student in Lista_Estudiantes:
-                    print(Lista_Estudiantes)
+                Lista_Estudiantes = funciones_student.Obtener_Name_Student(student_data)
+                ciclo = 1
+                print ("\n")
+                print ("Estos son todos los estudiantes que se tienen registrados en la base de Datos.")
+                for name_student in Lista_Estudiantes:
+                    print(ciclo, name_student, end="")
+                    ciclo += 1
 
             elif Verificacion == 4:  # Consultar promedio de estudiantes.
                 #Invocamos la fucion que matricula al estudiante, añadiendolo en la base de datos.
@@ -363,9 +357,6 @@ while Iniciar == True:
                 else:
                     print("El número de identifición ingresado es incorrecto, vuelvelo a intentar nuevamente.")
             elif Verificacion == 6: #Regresa al menu principal, cambiando los valores pertinentes, "Retroceder"
-                if Modificado == True:
-                    Cerrar_Programa_Guardar(new_data_student)
-
                 Menu_Inicial = True
                 Menu_secund_students = False
                 Menu_secund_cursos = False
@@ -373,7 +364,8 @@ while Iniciar == True:
                 Menu_Inicial = False
                 Menu_secund_students = False
                 Menu_secund_cursos = False
-        
+    
+    #Menu de cursos.
     elif Menu_secund_cursos == True:
         while Menu_secund_cursos == True:
             selection_user = Menu_Cursos()
@@ -386,13 +378,27 @@ while Iniciar == True:
 
             #Comprobación e invocación de las funciones externas al archivo.
             if Verificacion == 1:  # Crear nuevo curso
-            #if Verificacion == opciones_list_estudiantes[Verificacion -1], podriamos utilizar este codigo, ambos cumplen con su funcion.
-               
-                print()
-
+                
+                #la funcion pide datos y verica retornando sus respectivo valores.
+                Condicional, Num_creditos, Name_curso, Num_notas = funciones_cursos.Verificacion_Add_Curso()
+                
+                if Condicional == True:
+                    #Concatenamos los datos ingresados por el usuario.
+                    subjects_data_concatenada = funciones_cursos.Concatenacion_Data(Num_creditos, Name_curso, Num_notas)
+                                        
+                    #Estamos llamando a la función para añadir la nueva data con los datos ingresados por el usuario.
+                    Crear_new_data_subjects(subjects_data_concatenada)
+                else:
+                    print("No se pudo añadir el curso, hubo un error.")
+                
             elif Verificacion == 2:  # Mostrar todos los cursos registrados.
-            #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
-                print()
+                Lista_Cursos = funciones_cursos.Obtener_Cursos(subjects_data)
+                ciclo = 1
+                print("\n")
+                print("Estos son todos los cursos registrados hasta momento.")
+                for name_curso in Lista_Cursos:
+                    print (ciclo, name_curso, end="")
+                    ciclo += 1
 
             elif Verificacion == 3:  # Consultar estudiantes matriculados en un curso.
             #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
@@ -403,7 +409,6 @@ while Iniciar == True:
                 print()
 
             elif Verificacion == 5:  # Regresa al menu principal, cambiando los valores pertinentes, "Retroceder"
-            #elif Verificacion == opciones_list_estudiantes[Verificacion -1]
                 Menu_Inicial = True
                 Menu_secund_students = False
                 Menu_secund_cursos = False
